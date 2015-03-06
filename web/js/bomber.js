@@ -1,10 +1,17 @@
-var game = new Phaser.Game(672, 480, Phaser.AUTO, 'game', {preload: preload, create: create, update: update, move: move});
+var game = new Phaser.Game(672, 480, Phaser.AUTO, 'game',
+{preload: preload, create: create, update: update, move: move, checkKeys: checkKeys, checkDirection: checkDirection, turn: turn});
 
 var map = null;
 var layer = null;
+var marker = new Phaser.Point();
+var turnPoint = new Phaser.Point();
+var directions = [null, null, null, null, null];
+var opposites = [Phaser.NONE, Phaser.RIGHT, Phaser.LEFT, Phaser.DOWN, Phaser.UP];
 var player = null;
 var speed = 150;
 var current = Phaser.UP;
+var cursors = null;
+var turning = null;
 
 // note: graphics copyright 2015 Photon Storm Ltd
 function preload() {    
@@ -25,15 +32,55 @@ function create() {
     map.setCollision(6, true, this.layer);
     
     player = game.add.sprite(48, 48, 'dude', 4);
+    player.animations.add('left', [0, 1, 2, 3], 10, true);
+    player.animations.add('right', [5, 6, 7, 8], 10, true);
     player.anchor.set(0.5);
-    player.scale.set(.8, .58);
+    player.scale.set(.92, .63);
     
     game.physics.arcade.enable(player);
-    move(Phaser.DOWN);
+    
+    cursors = game.input.keyboard.createCursorKeys();
+    //move(Phaser.DOWN);
 }
   
 function update() {
     game.physics.arcade.collide(player, layer);
+    
+    /*marker.x = game.math.snapToFloor(Math.floor(player.x), 32) / 32;
+    marker.y = game.math.snapToFloor(Math.floor(player.y), 32) / 32;
+    
+    directions[1] = map.getTileLeft(layer.index, marker.x, marker.y);
+    directions[2] = map.getTileRight(layer.index, marker.x, marker.y);
+    directions[3] = map.getTileAbove(layer.index, marker.x, marker.y);
+    directions[4] = map.getTileBelow(layer.index, marker.x, marker.y);
+    
+    //checkKeys();
+    if(turning !== Phaser.NONE) {
+        turn();
+    }*/
+    
+    // reset body velocity each time
+    player.body.velocity.x = 0;
+    player.body.velocity.y = 0;
+    
+    if(cursors.left.isDown) {
+        player.body.velocity.x = -150;
+        player.animations.play('left');
+    } else if (cursors.right.isDown) {
+        player.body.velocity.x = 150;
+        player.animations.play('right');
+    } else if (cursors.up.isDown) {
+        player.body.velocity.y = -150;
+        player.animations.stop();
+        player.frame = 4;
+    } else if (cursors.down.isDown) {
+        player.body.velocity.y = 150;
+        player.animations.stop();
+        player.frame = 4;
+    } else {
+        player.animations.stop();
+        player.frame = 4;
+    }
 }
 
 function move(direction) {
@@ -49,6 +96,59 @@ function move(direction) {
     }
     
     current = direction;
+}
+
+function checkKeys() {
+    if(cursors.left.isDown && current !== Phaser.LEFT) {
+        checkDirection(Phaser.LEFT);
+        player.animations.play('left');
+    } else if(cursors.right.isDown && current !== Phaser.RIGHT) {
+        checkDirection(Phaser.RIGHT);
+        player.animations.play('right');
+    } else if(cursors.up.isDown && current !== Phaser.UP) {
+        checkDirection(Phaser.UP);
+        player.animations.play('stop');
+    } else if(cursors.down.isDown && current !== Phaser.DOWN) {
+        checkDirection(Phaser.DOWN);
+        player.animations.play('stop');
+    } else {
+        turning = Phaser.NONE;
+        player.animations.play('stop');
+    }
+}
+
+function checkDirection(direction) {
+    if(current === opposites[direction]) {
+        move(direction);
+    } else {
+        turning = direction;
+        
+        turnPoint.x = marker.x*32 + 32/2;
+        turnPoint.y = marker.y*32 + 32/2;
+    
+    }
+}
+
+function distance(px, py) {
+    return Math.pow((Math.pow(py.x - px.x, 2) + Math.pow(py.y - px.y, 2)), 0.5);
+}
+
+function turn() {
+    var px = Math.floor(player.x);
+    var py = Math.floor(player.y);
+    
+    var playerPoint = new Phaser.Point(px, py);
+    
+    if(distance(playerPoint, turnPoint) > 3) {
+        return false;
+    } else {
+        player.x = turnPoint.x;
+        player.y = turnPoint.y;
+        player.body.reset(turnPoint.x, turnPoint.y);
+        move(turning);
+        turning = Phaser.NONE;
+        return true;
+    }
 }
 
 //game.state.add('Game', PhaserGame, true);
