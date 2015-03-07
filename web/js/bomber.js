@@ -33,7 +33,7 @@ function preload() {
     /*this.load.image('firstaid', 'assets/firstaid.png'); 
     this.load.spritesheet('dude', 'assets/dude.png', 32, 48);
     this.load.spritesheet('baddie', 'assets/baddie.png', 32, 48);*/
-	game.load.spritesheet('baddie','assets/baddie.png', 32,32);
+    game.load.spritesheet('baddie','assets/baddie.png', 32,32);
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 }
 
@@ -44,31 +44,31 @@ function create() {
     layer = map.createLayer('Tile Layer 1');
     
     map.setCollision(6, true, this.layer);
-   	Zombie1 = game.add.sprite(32*5.5, 32*1.5, 'baddie', 2);
-   	Zombie2 = game.add.sprite(32*5.5, 32*7.5, 'baddie', 2);
-   	Zombie3 = game.add.sprite(32*5.5, 32*5.5, 'baddie', 2);
-   	Zombie4 = game.add.sprite(32*3.5, 32*4.5, 'baddie', 2);
-	Zombie1.animations.add('left',[0,1],10,true);
-	Zombie1.animations.add('right',[2,3],10,true);
-	Zombie1.anchor.set(.5);
-	Zombie1.scale.set(1, .50);
-	Zombie2.animations.add('left',[0,1],10,true);
-	Zombie2.animations.add('right',[2,3],10,true);
-	Zombie2.anchor.set(.5);
-	Zombie2.scale.set(1, .66);
-	Zombie3.animations.add('left',[0,1],10,true);
-	Zombie3.animations.add('right',[2,3],10,true);
-	Zombie3.anchor.set(.5);
-	Zombie3.scale.set(1, .50);
-	Zombie4.animations.add('left',[0,1],10,true);
-	Zombie4.animations.add('right',[2,3],10,true);
-	Zombie4.anchor.set(.5);
-	Zombie4.scale.set(1, .50);
-   	Zombie5 = game.add.sprite(32*5.5, 32*4.5, 'baddie', 2);
-	Zombie5.animations.add('left',[0,1],10,true);
-	Zombie5.animations.add('right',[2,3],10,true);
-	Zombie5.anchor.set(.5);
-	Zombie5.scale.set(1, .66);
+    Zombie1 = game.add.sprite(32*5.5, 32*1.5, 'baddie', 2);
+    Zombie2 = game.add.sprite(32*5.5, 32*7.5, 'baddie', 2);
+    Zombie3 = game.add.sprite(32*5.5, 32*5.5, 'baddie', 2);
+    Zombie4 = game.add.sprite(32*3.5, 32*4.5, 'baddie', 2);
+    Zombie1.animations.add('left',[0,1],10,true);
+    Zombie1.animations.add('right',[2,3],10,true);
+    Zombie1.anchor.set(.5);
+    Zombie1.scale.set(1, .50);
+    Zombie2.animations.add('left',[0,1],10,true);
+    Zombie2.animations.add('right',[2,3],10,true);
+    Zombie2.anchor.set(.5);
+    Zombie2.scale.set(1, .66);
+    Zombie3.animations.add('left',[0,1],10,true);
+    Zombie3.animations.add('right',[2,3],10,true);
+    Zombie3.anchor.set(.5);
+    Zombie3.scale.set(1, .50);
+    Zombie4.animations.add('left',[0,1],10,true);
+    Zombie4.animations.add('right',[2,3],10,true);
+    Zombie4.anchor.set(.5);
+    Zombie4.scale.set(1, .50);
+    Zombie5 = game.add.sprite(32*5.5, 32*4.5, 'baddie', 2);
+    Zombie5.animations.add('left',[0,1],10,true);
+    Zombie5.animations.add('right',[2,3],10,true);
+    Zombie5.anchor.set(.5);
+    Zombie5.scale.set(1, .66);
 
  
     player = game.add.sprite(48, 48, 'dude', 4);
@@ -78,8 +78,7 @@ function create() {
     player.scale.set(1, .66);
     
     game.physics.arcade.enable(player);
-     //game.physics.arcade.enable(bomb);
-
+    //game.physics.arcade.enable(bomb);
     
     cursors = game.input.keyboard.createCursorKeys();
     spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
@@ -90,12 +89,27 @@ function create() {
     game.physics.arcade.enable(Zombie4);
     game.physics.arcade.enable(Zombie5);
 
-	Zombie1.body.velocity.x = 100;
-	Zombie2.body.velocity.x = 100;
-	Zombie3.body.velocity.x = 100;
-	Zombie4.body.velocity.y = 100;
-	Zombie5.body.velocity.y = -100;
+    Zombie1.body.velocity.x = 100;
+    Zombie2.body.velocity.x = 100;
+    Zombie3.body.velocity.x = 100;
+    Zombie4.body.velocity.y = 100;
+    Zombie5.body.velocity.y = -100;
     //move(Phaser.DOWN);
+    
+    
+
+    detKey.onDown.add(function(){
+        //player.destroy();
+        bombPointer.destroy();
+        //console.log(bombPointer);
+    }, this);
+
+    spaceKey.onDown.add(function(){
+        var bomb = game.add.sprite(marker.x * 32 + 16, marker.y * 32 + 16, 'bomb', 0);
+        bomb.anchor.set(0.5);
+        bomb.scale.set(.40, .30);        //bomb.destroy();
+        bombPointer = bomb;
+    }, this);
 
 
     //player.body.collides(bombCG);
@@ -156,19 +170,7 @@ function update() {
         player.frame = 4;
     }
 
-
-    detKey.onDown.add(function(){
-        player.destroy();
-    }, this);
-
-    spaceKey.onDown.add(function(){
-        var bomb = game.add.sprite(marker.x * 32 + 16, marker.y * 32 + 16, 'bomb', 0);
-        bomb.anchor.set(0.5);
-        bomb.scale.set(.40, .30);        //bomb.destroy();
-        bombPointer = bomb;
-    }, this);
-
-	AnimateZombie();
+    AnimateZombie();
 }
 
 
@@ -183,63 +185,63 @@ function snapToCenter()
 }
 
 function getTileCoord(o){
-	var pz = new Phaser.Point();
+    var pz = new Phaser.Point();
     pz.x = game.math.snapToFloor(Math.floor(o.x), 32) / 32;
     pz.y = game.math.snapToFloor(Math.floor(o.y), 32) / 32;
-	return pz;
+    return pz;
 }
 
 function AnimateZombie(){
-	var point = getTileCoord(Zombie1);
-	var point2 = getTileCoord(Zombie2);
-	var point3 = getTileCoord(Zombie3);
-	var point4 = getTileCoord(Zombie4);
-	var point5 = getTileCoord(Zombie5);
-	if(point.x==1){
-        Zombie1.animations.play('right');
-		Zombie1.body.velocity.x = 150;
-	}
-	if(point.x==12)
-	{
-        Zombie1.animations.play('left');
-		Zombie1.body.velocity.x = -150;
-	}
-	if(point2.x==1){
-        Zombie2.animations.play('right');
-		Zombie2.body.velocity.x = 150;
-	}
-	if(point2.x==12)
-	{
-        Zombie2.animations.play('left');
-		Zombie2.body.velocity.x = -150;
-	}
-	if(point3.x==3){
-        Zombie3.animations.play('right');
-		Zombie3.body.velocity.x = 150;
-	}
-	if(point3.x==7)
-	{
-        Zombie3.animations.play('left');
-		Zombie3.body.velocity.x = -150;
-	}
-	if(point4.y==1){
-        Zombie4.animations.play('right');
-		Zombie4.body.velocity.y = 150;
-	}
-	if(point4.y==12)
-	{
-        Zombie4.animations.play('left');
-		Zombie4.body.velocity.y = -150;
-	}
-	if(point5.y==4){
-        Zombie5.animations.play('right');
-		Zombie5.body.velocity.y = 150;
-	}
-	if(point5.y==12)
-	{
-        Zombie5.animations.play('left');
-		Zombie5.body.velocity.y = -150;
-	}
+    var point = getTileCoord(Zombie1);
+    var point2 = getTileCoord(Zombie2);
+    var point3 = getTileCoord(Zombie3);
+    var point4 = getTileCoord(Zombie4);
+    var point5 = getTileCoord(Zombie5);
+    if(point.x==1){
+    Zombie1.animations.play('right');
+        Zombie1.body.velocity.x = 150;
+    }
+    if(point.x==12)
+    {
+    Zombie1.animations.play('left');
+        Zombie1.body.velocity.x = -150;
+    }
+    if(point2.x==1){
+    Zombie2.animations.play('right');
+        Zombie2.body.velocity.x = 150;
+    }
+    if(point2.x==12)
+    {
+    Zombie2.animations.play('left');
+        Zombie2.body.velocity.x = -150;
+    }
+    if(point3.x==3){
+    Zombie3.animations.play('right');
+        Zombie3.body.velocity.x = 150;
+    }
+    if(point3.x==7)
+    {
+    Zombie3.animations.play('left');
+        Zombie3.body.velocity.x = -150;
+    }
+    if(point4.y==1){
+    Zombie4.animations.play('right');
+        Zombie4.body.velocity.y = 150;
+    }
+    if(point4.y==12)
+    {
+    Zombie4.animations.play('left');
+        Zombie4.body.velocity.y = -150;
+    }
+    if(point5.y==4){
+    Zombie5.animations.play('right');
+        Zombie5.body.velocity.y = 150;
+    }
+    if(point5.y==12)
+    {
+    Zombie5.animations.play('left');
+        Zombie5.body.velocity.y = -150;
+    }
 }
 
 function snapToY()
