@@ -12,13 +12,14 @@ var speed = 150;
 var current = Phaser.UP;
 var cursors = null;
 var turning = null;
+var spaceKey = null;
 
 // note: graphics copyright 2015 Photon Storm Ltd
 function preload() {    
     game.load.tilemap('map', 'assets/map.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.image('tiles', 'assets/tiles.png');
-    /*this.load.image('firstaid', 'assets/firstaid.png');
     this.load.image('bomb', 'assets/bomb.png');
+    /*this.load.image('firstaid', 'assets/firstaid.png'); 
     this.load.spritesheet('dude', 'assets/dude.png', 32, 48);
     this.load.spritesheet('baddie', 'assets/baddie.png', 32, 48);*/
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
@@ -35,11 +36,12 @@ function create() {
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
     player.anchor.set(0.5);
-    player.scale.set(.92, .63);
+    player.scale.set(1, .66);
     
     game.physics.arcade.enable(player);
     
     cursors = game.input.keyboard.createCursorKeys();
+    spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     //move(Phaser.DOWN);
 }
   
@@ -60,27 +62,72 @@ function update() {
     }*/
     
     // reset body velocity each time
-    player.body.velocity.x = 0;
-    player.body.velocity.y = 0;
+    /*player.body.velocity.x = 0;
+    player.body.velocity.y = 0;*/
     
     if(cursors.left.isDown) {
+        //snapToY();
         player.body.velocity.x = -150;
         player.animations.play('left');
     } else if (cursors.right.isDown) {
+        //snapToY();
         player.body.velocity.x = 150;
         player.animations.play('right');
     } else if (cursors.up.isDown) {
+        //snapToX();
         player.body.velocity.y = -150;
         player.animations.stop();
         player.frame = 4;
     } else if (cursors.down.isDown) {
+        //snapToX();
         player.body.velocity.y = 150;
         player.animations.stop();
         player.frame = 4;
     } else {
+        player.body.velocity.x = 0;
+        player.body.velocity.y = 0;
+        snapToCenter();
         player.animations.stop();
         player.frame = 4;
     }
+
+    /*spaceKey.onPress(function(){
+        var bomb = game.add.sprite(48, 48, 'bomb', 0);
+        bomb.anchor.set(0.5);
+        //bomb.scale.set(1, .66);
+    });*/
+
+
+
+
+
+
+
+}
+
+function snapToCenter()
+{
+    marker.x = game.math.snapToFloor(Math.floor(player.x), 32) / 32;
+    marker.y = game.math.snapToFloor(Math.floor(player.y), 32) / 32;
+
+    player.body.x = (marker.x * 32);
+    player.body.y = (marker.y * 32);
+}
+
+
+
+function snapToY()
+{
+    marker.y = game.math.snapToFloor(Math.floor(player.y), 32) / 32;
+
+    player.body.y = (marker.y * 32);
+}
+
+function snapToX()
+{
+    marker.x = game.math.snapToFloor(Math.floor(player.x), 32) / 32;
+
+    player.body.x = (marker.x * 32);
 }
 
 function move(direction) {
