@@ -39,13 +39,6 @@ function preload() {
 
 function create() {
 
-    bombs = game.add.group();
-    bombs.enableBody = true;
-    bombs.physicsBodyType = Phaser.Physics.Arcade;
-    bombs.createMultiple(3, 'bomb');
-    bombs.setAll('anchor.x', 0.5);
-    bombs.setAll('anchor.y', 0.5);
-
     map = game.add.tilemap('map');
     map.addTilesetImage('tiles', 'tiles');
     layer = map.createLayer('Tile Layer 1');
@@ -117,10 +110,6 @@ function update() {
     game.physics.arcade.collide(Zombie5, layer);
     
     game.physics.arcade.collide(player, layer);
-    /*if(bombCount)
-    {
-        game.physics.arcade.collide(player, bomb);
-    }*/
     /*marker.x = game.math.snapToFloor(Math.floor(player.x), 32) / 32;
     marker.y = game.math.snapToFloor(Math.floor(player.y), 32) / 32;
     
@@ -173,35 +162,13 @@ function update() {
     }, this);
 
     spaceKey.onDown.add(function(){
-        bomb = bombs.getFirstExists(false);
-        if(bomb)
-        {
-            bomb.reset(marker.x * 32 + 16, marker.y * 32 + 16)
-        }
-
-
-        /*var bomb = bombs.create(marker.x * 32 + 16, marker.y * 32 + 16, 'bomb', 0);
-        bomb.anchor.setTo(0.5, .05);*/
-        //bomb.destroy();
+        var bomb = game.add.sprite(marker.x * 32 + 16, marker.y * 32 + 16, 'bomb', 0);
+        bomb.anchor.set(0.5);
+        bomb.scale.set(.40, .30);        //bomb.destroy();
+        bombPointer = bomb;
     }, this);
 
-    function dBomb(obj)
-    {
-        alert("hello");
-    }
 	AnimateZombie();
-    /*spaceKey.onPress(function(){
-        var bomb = game.add.sprite(48, 48, 'bomb', 0);
-        bomb.anchor.set(0.5);
-        //bomb.scale.set(1, .66);
-    });*/
-
-
-
-
-
-
-
 }
 
 
