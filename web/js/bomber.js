@@ -7,6 +7,7 @@ var marker = new Phaser.Point();
 var turnPoint = new Phaser.Point();
 var directions = [null, null, null, null, null];
 var opposites = [Phaser.NONE, Phaser.RIGHT, Phaser.LEFT, Phaser.DOWN, Phaser.UP];
+var Zombie1 = null;
 var player = null;
 var speed = 150;
 var current = Phaser.UP;
@@ -22,6 +23,7 @@ function preload() {
     /*this.load.image('firstaid', 'assets/firstaid.png'); 
     this.load.spritesheet('dude', 'assets/dude.png', 32, 48);
     this.load.spritesheet('baddie', 'assets/baddie.png', 32, 48);*/
+	game.load.spritesheet('baddie','assets/baddie.png', 32,32);
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 }
 
@@ -31,7 +33,13 @@ function create() {
     layer = map.createLayer('Tile Layer 1');
     
     map.setCollision(6, true, this.layer);
-    
+   	Zombie1 = game.add.sprite(100, 48, 'baddie', 4);
+	Zombie1.animations.add('left',[0,1],10,true);
+	Zombie1.animations.add('right',[2,3],10,true);
+	Zombie1.anchor.set(.5);
+	Zombie1.scale.set(1, .66);
+
+ 
     player = game.add.sprite(48, 48, 'dude', 4);
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
@@ -39,14 +47,17 @@ function create() {
     player.scale.set(1, .66);
     
     game.physics.arcade.enable(player);
+    game.physics.arcade.enable(Zombie1);
     
     cursors = game.input.keyboard.createCursorKeys();
     spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+	Zombie1.body.velocity.x = 100;
     //move(Phaser.DOWN);
 }
   
 function update() {
     game.physics.arcade.collide(player, layer);
+    game.physics.arcade.collide(Zombie1, layer);
     
     /*marker.x = game.math.snapToFloor(Math.floor(player.x), 32) / 32;
     marker.y = game.math.snapToFloor(Math.floor(player.y), 32) / 32;
@@ -90,7 +101,7 @@ function update() {
         player.animations.stop();
         player.frame = 4;
     }
-
+	AnimateZombie();
     /*spaceKey.onPress(function(){
         var bomb = game.add.sprite(48, 48, 'bomb', 0);
         bomb.anchor.set(0.5);
@@ -114,7 +125,27 @@ function snapToCenter()
     player.body.y = (marker.y * 32);
 }
 
+function getTileCoord(o){
+	var pz = new Phaser.Point();
+    pz.x = game.math.snapToFloor(Math.floor(o.x), 32) / 32;
+    pz.y = game.math.snapToFloor(Math.floor(o.y), 32) / 32;
+	return pz;
+}
 
+function AnimateZombie(){
+	var point = getTileCoord(Zombie1);
+	if(point.x==1){
+		
+        Zombie1.animations.play('right');
+		Zombie1.body.velocity.x = 150;
+	}
+	if(point.x==15)
+	{
+		
+        Zombie1.animations.play('left');
+		Zombie1.body.velocity.x = -150;
+	}
+}
 
 function snapToY()
 {
