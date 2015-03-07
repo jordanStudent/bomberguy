@@ -1,6 +1,8 @@
 var game = new Phaser.Game(672, 480, Phaser.AUTO, 'game',
 {preload: preload, create: create, update: update, move: move, checkKeys: checkKeys, checkDirection: checkDirection, turn: turn});
 
+var bombs;
+
 var map = null;
 var layer = null;
 var marker = new Phaser.Point();
@@ -13,6 +15,10 @@ var current = Phaser.UP;
 var cursors = null;
 var turning = null;
 var spaceKey = null;
+var detKey = null;
+var bombCG = null;
+var bombPointer = null;
+
 
 // note: graphics copyright 2015 Photon Storm Ltd
 function preload() {    
@@ -26,6 +32,14 @@ function preload() {
 }
 
 function create() {
+
+    bombs = game.add.group();
+    bombs.enableBody = true;
+    bombs.physicsBodyType = Phaser.Physics.Arcade;
+    bombs.createMultiple(3, 'bomb');
+    bombs.setAll('anchor.x', 0.5);
+    bombs.setAll('anchor.y', 0.5);
+
     map = game.add.tilemap('map');
     map.addTilesetImage('tiles', 'tiles');
     layer = map.createLayer('Tile Layer 1');
@@ -39,15 +53,25 @@ function create() {
     player.scale.set(1, .66);
     
     game.physics.arcade.enable(player);
+     //game.physics.arcade.enable(bomb);
+
     
     cursors = game.input.keyboard.createCursorKeys();
     spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    detKey = game.input.keyboard.addKey(Phaser.Keyboard.X);
     //move(Phaser.DOWN);
+
+
+    //player.body.collides(bombCG);
 }
   
 function update() {
-    game.physics.arcade.collide(player, layer);
     
+    game.physics.arcade.collide(player, layer);
+    /*if(bombCount)
+    {
+        game.physics.arcade.collide(player, bomb);
+    }*/
     /*marker.x = game.math.snapToFloor(Math.floor(player.x), 32) / 32;
     marker.y = game.math.snapToFloor(Math.floor(player.y), 32) / 32;
     
@@ -64,6 +88,9 @@ function update() {
     // reset body velocity each time
     /*player.body.velocity.x = 0;
     player.body.velocity.y = 0;*/
+
+    marker.x = game.math.snapToFloor(Math.floor(player.x), 32) / 32;
+    marker.y = game.math.snapToFloor(Math.floor(player.y), 32) / 32;
     
     if(cursors.left.isDown) {
         //snapToY();
@@ -91,11 +118,29 @@ function update() {
         player.frame = 4;
     }
 
-    /*spaceKey.onPress(function(){
-        var bomb = game.add.sprite(48, 48, 'bomb', 0);
-        bomb.anchor.set(0.5);
-        //bomb.scale.set(1, .66);
-    });*/
+
+    detKey.onDown.add(function(){
+        player.destroy();
+    }, this);
+
+    spaceKey.onDown.add(function(){
+        bomb = bombs.getFirstExists(false);
+        if(bomb)
+        {
+            bomb.reset(marker.x * 32 + 16, marker.y * 32 + 16)
+        }
+
+
+        /*var bomb = bombs.create(marker.x * 32 + 16, marker.y * 32 + 16, 'bomb', 0);
+        bomb.anchor.setTo(0.5, .05);*/
+        //bomb.destroy();
+    }, this);
+
+    function dBomb(obj)
+    {
+        alert("hello");
+    }
+
 
 
 
@@ -104,6 +149,8 @@ function update() {
 
 
 }
+
+
 
 function snapToCenter()
 {
