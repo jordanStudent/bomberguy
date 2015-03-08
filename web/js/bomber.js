@@ -35,6 +35,7 @@ function preload() {
     this.load.spritesheet('baddie', 'assets/baddie.png', 32, 48);*/
     game.load.spritesheet('baddie','assets/baddie.png', 32,32);
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    game.load.spritesheet('explosion', 'assets/explosion17.png', 64, 64);
 }
 
 function create() {
@@ -190,6 +191,30 @@ function getTileCoord(o){
     pz.y = game.math.snapToFloor(Math.floor(o.y), 32) / 32;
     return pz;
 }
+
+//Pass this function a bomb!!!
+function boom(b){
+	var fireSprites = [];
+	var x = getTileCoord(b).x;
+	var y = getTileCoord(b).y;
+	var hitTiles = [new Phaser.Point(x,y), new Phaser.Point(x+1,y), new Phaser.Point(x-1,y), new Phaser.Point(x,y+1),new Phaser.Point(x, y-1)];
+	for(var i = 0; i<5; ++i){
+		fireSprites.add(game.add.sprite(hitTiles[i].x * 32 + 16, hitTiles[i].y * 32 + 16, 'explosion', 0));
+		fireSprites[i].anchor.set(0.5);
+		fireSprites[i].scale.set(.40, .30);  
+    	fireSprites[i].animations.add('left',[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25],10,true);
+        fireSprites[i].animations.play('left');
+		
+	}
+	setTimeout(function(){fireSprites.forEach(function(s){s.destroy();} ); }, 3000);
+	//Call the fallout function after this comment!!!!
+	
+
+}
+
+
+
+
 
 function AnimateZombie(){
     var point = getTileCoord(Zombie1);
