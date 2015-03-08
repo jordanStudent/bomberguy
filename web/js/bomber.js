@@ -23,6 +23,7 @@ var spaceKey = null;
 var detKey = null;
 var bombCG = null;
 var bombPointer = null;
+var baddieCounter = 5;
 
 
 // note: graphics copyright 2015 Photon Storm Ltd
@@ -108,20 +109,17 @@ function create() {
     spaceKey.onDown.add(function(){
         var bomb = game.add.sprite(marker.x * 32 + 16, marker.y * 32 + 16, 'bomb', 0);
         bomb.anchor.set(0.5);
-        bomb.scale.set(.40, .30);        //bomb.destroy();
-        bombPointer = bomb;
-    }, this);
-
-    spaceKey.onDown.add(function(){
-        var bomb = game.add.sprite(marker.x * 32 + 16, marker.y * 32 + 16, 'bomb', 0);
-        bomb.anchor.set(0.5);
         bomb.scale.set(.40, .30);
         bombPointer = bomb;
         setTimeout(function()
         {
+                
             fallout(bomb);
+            boom(bomb);
             bomb.destroy();
+
         }, 1000);
+        
     }, this);
 
     //player.body.collides(bombCG);
@@ -212,14 +210,26 @@ function boom(b){
 	var y = getTileCoord(b).y;
 	var hitTiles = [new Phaser.Point(x,y), new Phaser.Point(x+1,y), new Phaser.Point(x-1,y), new Phaser.Point(x,y+1),new Phaser.Point(x, y-1)];
 	for(var i = 0; i<5; ++i){
-		fireSprites.add(game.add.sprite(hitTiles[i].x * 32 + 16, hitTiles[i].y * 32 + 16, 'explosion', 0));
+		fireSprites.push(game.add.sprite(hitTiles[i].x * 32 + 16, hitTiles[i].y * 32 + 16, 'explosion', 0));
 		fireSprites[i].anchor.set(0.5);
 		fireSprites[i].scale.set(.40, .30);  
     	fireSprites[i].animations.add('left',[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25],10,true);
         fireSprites[i].animations.play('left');
 		
 	}
-	setTimeout(function(){fireSprites.forEach(function(s){s.destroy();} ); }, 3000);
+	
+    setTimeout(function(){fireSprites.forEach(function(s){
+            s.destroy();
+        } ); }, 2000);
+
+    for(var x = 0; x < 5; x++)
+    {
+        setTimeout(function(){fireSprites.forEach(function(s){
+            fallout(b);
+        } ); }, x * 400);
+    }
+
+
 	//Call the fallout function after this comment!!!!
 	
 
@@ -369,72 +379,115 @@ function fallout(b)
 
     marker.x = game.math.snapToFloor(Math.floor(b.x), 32);
     marker.y = game.math.snapToFloor(Math.floor(b.y), 32);
-
-    console.log(marker.x);
-    console.log(marker.y);
-
     //Check Zombie 1
-    if(Zombie1.body.y > marker.y && Zombie1.y < (marker.y + 32))
+    if(Zombie1.body.y >= marker.y && Zombie1.y <= (marker.y + 32))
     {
-        if(Zombie1.body.x > (marker.x - 32) && Zombie1.body.x < (marker.x + 64))
+        if(Zombie1.body.x >= (marker.x - 32) && Zombie1.body.x <= (marker.x + 64))
+        {
             Zombie1.destroy();
+            baddieCounter--;
+        }
+
     }
-    if(Zombie1.body.x > marker.x && Zombie1.x < (marker.x + 32))
+    if(Zombie1.body.x >= marker.x && Zombie1.x <= (marker.x + 32))
     {
-        if(Zombie1.body.y > (marker.y - 32) && Zombie1.body.y < (marker.y + 64))
+        if(Zombie1.body.y >= (marker.y - 32) && Zombie1.body.y <= (marker.y + 64))
+        {
             Zombie1.destroy();
+            baddieCounter--;
+        }
     }
 
     //Check Zombie 2
-    if(Zombie2.body.y > marker.y && Zombie2.y < (marker.y + 32))
+    if(Zombie2.body.y >= marker.y && Zombie2.y <= (marker.y + 32))
     {
-        if(Zombie2.body.x > (marker.x - 32) && Zombie2.body.x < (marker.x + 64))
+        if(Zombie2.body.x >= (marker.x - 32) && Zombie2.body.x <= (marker.x + 64))
+        {
             Zombie2.destroy();
+            baddieCounter--;
+        }
     }
-    if(Zombie2.body.x > marker.x && Zombie2.x < (marker.x + 32))
+    if(Zombie2.body.x >= marker.x && Zombie2.x <= (marker.x + 32))
     {
-        if(Zombie2.body.y > (marker.y - 32) && Zombie2.body.y < (marker.y + 64))
+        if(Zombie2.body.y >= (marker.y - 32) && Zombie2.body.y <= (marker.y + 64))
+        {
             Zombie2.destroy();
+            baddieCounter--;
+        }
     }
 
     //Check Zombie 3
-    if(Zombie3.body.y > marker.y && Zombie3.y < (marker.y + 32))
+    if(Zombie3.body.y >= marker.y && Zombie3.y <= (marker.y + 32))
     {
-        if(Zombie3.body.x > (marker.x - 32) && Zombie3.body.x < (marker.x + 64))
+        if(Zombie3.body.x >= (marker.x - 32) && Zombie3.body.x <= (marker.x + 64))
+        {
             Zombie3.destroy();
+            baddieCounter--;
+        }
     }
-    if(Zombie3.body.x > marker.x && Zombie3.x < (marker.x + 32))
+    if(Zombie3.body.x >= marker.x && Zombie3.x <= (marker.x + 32))
     {
-        if(Zombie3.body.y > (marker.y - 32) && Zombie3.body.y < (marker.y + 64))
+        if(Zombie3.body.y >= (marker.y - 32) && Zombie3.body.y <= (marker.y + 64))
+        {
             Zombie3.destroy();
+            baddieCounter--;
+        }
     }
 
     //Check Zombie 4
-    if(Zombie4.body.y > marker.y && Zombie4.y < (marker.y + 32))
+    if(Zombie4.body.y >= marker.y && Zombie4.y <= (marker.y + 32))
     {
-        if(Zombie4.body.x > (marker.x - 32) && Zombie4.body.x < (marker.x + 64))
+        if(Zombie4.body.x >= (marker.x - 32) && Zombie4.body.x <= (marker.x + 64))
+        {
             Zombie4.destroy();
+            baddieCounter--;
+        }
     }
-    if(Zombie4.body.x > marker.x && Zombie4.x < (marker.x + 32))
+    if(Zombie4.body.x >= marker.x && Zombie4.x <= (marker.x + 32))
     {
-        if(Zombie4.body.y > (marker.y - 32) && Zombie4.body.y < (marker.y + 64))
+        if(Zombie4.body.y >= (marker.y - 32) && Zombie4.body.y <= (marker.y + 64))
+        {
             Zombie4.destroy();
+            baddieCounter--;
+        }
     }
 
     //Check Zombie 5
-    if(Zombie5.body.y > marker.y && Zombie5.y < (marker.y + 32))
+    if(Zombie5.body.y >= marker.y && Zombie5.y <= (marker.y + 32))
     {
-        if(Zombie5.body.x > (marker.x - 32) && Zombie5.body.x < (marker.x + 64))
+        if(Zombie5.body.x >= (marker.x - 32) && Zombie5.body.x <= (marker.x + 64))
+        {
             Zombie5.destroy();
+            baddieCounter--;
+        }
     }
-    if(Zombie5.body.x > marker.x && Zombie5.x < (marker.x + 32))
+    if(Zombie5.body.x >= marker.x && Zombie5.x <= (marker.x + 32))
     {
-        if(Zombie5.body.y > (marker.y - 32) && Zombie5.body.y < (marker.y + 64))
+        if(Zombie5.body.y >= (marker.y - 32) && Zombie5.body.y <= (marker.y + 64))
+        {
             Zombie5.destroy();
+            baddieCounter--;
+        }
     }
 
+    if(player.body.y >= marker.y && player.y <= (marker.y + 32))
+    {
+        if(player.body.x >= (marker.x - 32) && player.body.x <= (marker.x + 64))
+        {
+            player.destroy();
+            alert("Gam Over!\nRefresh to play again");
+        }
 
 
+    }
+    if(player.body.x >= marker.x && player.x <= (marker.x + 32))
+    {
+        if(player.body.y >= (marker.y - 32) && player.body.y <= (marker.y + 64))
+         {
+            player.destroy();
+            alert("Gam Over!\nRefresh to play again");
+        }
+    }
 
 
 }
