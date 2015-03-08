@@ -81,7 +81,7 @@ function create() {
     
     game.physics.arcade.enable(player);
     //game.physics.arcade.enable(bomb);
-    player.physics.arcade.body.immovable = true;
+    //player.physics.arcade.body.immovable = true;
     
     
     cursors = game.input.keyboard.createCursorKeys();
