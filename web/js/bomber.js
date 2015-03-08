@@ -97,6 +97,17 @@ function create() {
 	Zombie5.body.velocity.y = -100;
     //move(Phaser.DOWN);
 
+    spaceKey.onDown.add(function(){
+        var bomb = game.add.sprite(marker.x * 32 + 16, marker.y * 32 + 16, 'bomb', 0);
+        bomb.anchor.set(0.5);
+        bomb.scale.set(.40, .30);
+        bombPointer = bomb;
+        setTimeout(function()
+        {
+            fallout(bomb);
+            bomb.destroy();
+        }, 1000);
+    }, this);
 
     //player.body.collides(bombCG);
 }
@@ -157,16 +168,7 @@ function update() {
     }
 
 
-    detKey.onDown.add(function(){
-        player.destroy();
-    }, this);
 
-    spaceKey.onDown.add(function(){
-        var bomb = game.add.sprite(marker.x * 32 + 16, marker.y * 32 + 16, 'bomb', 0);
-        bomb.anchor.set(0.5);
-        bomb.scale.set(.40, .30);        //bomb.destroy();
-        bombPointer = bomb;
-    }, this);
 
 	AnimateZombie();
 }
@@ -323,5 +325,81 @@ function turn() {
         return true;
     }
 }
+
+function fallout(b)
+{
+
+    marker.x = game.math.snapToFloor(Math.floor(b.x), 32);
+    marker.y = game.math.snapToFloor(Math.floor(b.y), 32);
+
+    console.log(marker.x);
+    console.log(marker.y);
+
+    //Check Zombie 1
+    if(Zombie1.body.y > marker.y && Zombie1.y < (marker.y + 32))
+    {
+        if(Zombie1.body.x > (marker.x - 32) && Zombie1.body.x < (marker.x + 64))
+            Zombie1.destroy();
+    }
+    if(Zombie1.body.x > marker.x && Zombie1.x < (marker.x + 32))
+    {
+        if(Zombie1.body.y > (marker.y - 32) && Zombie1.body.y < (marker.y + 64))
+            Zombie1.destroy();
+    }
+
+    //Check Zombie 2
+    if(Zombie2.body.y > marker.y && Zombie2.y < (marker.y + 32))
+    {
+        if(Zombie2.body.x > (marker.x - 32) && Zombie2.body.x < (marker.x + 64))
+            Zombie2.destroy();
+    }
+    if(Zombie2.body.x > marker.x && Zombie2.x < (marker.x + 32))
+    {
+        if(Zombie2.body.y > (marker.y - 32) && Zombie2.body.y < (marker.y + 64))
+            Zombie2.destroy();
+    }
+
+    //Check Zombie 3
+    if(Zombie3.body.y > marker.y && Zombie3.y < (marker.y + 32))
+    {
+        if(Zombie3.body.x > (marker.x - 32) && Zombie3.body.x < (marker.x + 64))
+            Zombie3.destroy();
+    }
+    if(Zombie3.body.x > marker.x && Zombie3.x < (marker.x + 32))
+    {
+        if(Zombie3.body.y > (marker.y - 32) && Zombie3.body.y < (marker.y + 64))
+            Zombie3.destroy();
+    }
+
+    //Check Zombie 4
+    if(Zombie4.body.y > marker.y && Zombie4.y < (marker.y + 32))
+    {
+        if(Zombie4.body.x > (marker.x - 32) && Zombie4.body.x < (marker.x + 64))
+            Zombie4.destroy();
+    }
+    if(Zombie4.body.x > marker.x && Zombie4.x < (marker.x + 32))
+    {
+        if(Zombie4.body.y > (marker.y - 32) && Zombie4.body.y < (marker.y + 64))
+            Zombie4.destroy();
+    }
+
+    //Check Zombie 5
+    if(Zombie5.body.y > marker.y && Zombie5.y < (marker.y + 32))
+    {
+        if(Zombie5.body.x > (marker.x - 32) && Zombie5.body.x < (marker.x + 64))
+            Zombie5.destroy();
+    }
+    if(Zombie5.body.x > marker.x && Zombie5.x < (marker.x + 32))
+    {
+        if(Zombie5.body.y > (marker.y - 32) && Zombie5.body.y < (marker.y + 64))
+            Zombie5.destroy();
+    }
+
+
+
+
+
+}
+
 
 //game.state.add('Game', PhaserGame, true);
