@@ -171,9 +171,24 @@ function update() {
     }
 
     AnimateZombie();
+    
+    // check for collisions
+    hitBaddie(Zombie1);
+    hitBaddie(Zombie2);
+    hitBaddie(Zombie3);
+    hitBaddie(Zombie4);
+    hitBaddie(Zombie5);
 }
 
-
+function hitBaddie(sprite) {
+    if(sprite === Zombie1 || sprite === Zombie2 || sprite === Zombie3 ||
+            sprite === Zombie4 || sprite === Zombie5) {
+        game.physics.arcade.overlap(player, sprite, function() {
+            player.kill();
+            lose();
+        }, null, game);
+    }
+}
 
 function snapToCenter()
 {
@@ -197,47 +212,47 @@ function AnimateZombie(){
     var point3 = getTileCoord(Zombie3);
     var point4 = getTileCoord(Zombie4);
     var point5 = getTileCoord(Zombie5);
-    if(point.x==1){
+    if(point.x===1){
     Zombie1.animations.play('right');
         Zombie1.body.velocity.x = 150;
     }
-    if(point.x==12)
+    if(point.x===12)
     {
     Zombie1.animations.play('left');
         Zombie1.body.velocity.x = -150;
     }
-    if(point2.x==1){
+    if(point2.x===1){
     Zombie2.animations.play('right');
         Zombie2.body.velocity.x = 150;
     }
-    if(point2.x==12)
+    if(point2.x===12)
     {
     Zombie2.animations.play('left');
         Zombie2.body.velocity.x = -150;
     }
-    if(point3.x==3){
+    if(point3.x===3){
     Zombie3.animations.play('right');
         Zombie3.body.velocity.x = 150;
     }
-    if(point3.x==7)
+    if(point3.x===7)
     {
     Zombie3.animations.play('left');
         Zombie3.body.velocity.x = -150;
     }
-    if(point4.y==1){
+    if(point4.y===1){
     Zombie4.animations.play('right');
         Zombie4.body.velocity.y = 150;
     }
-    if(point4.y==12)
+    if(point4.y===12)
     {
     Zombie4.animations.play('left');
         Zombie4.body.velocity.y = -150;
     }
-    if(point5.y==4){
+    if(point5.y===4){
     Zombie5.animations.play('right');
         Zombie5.body.velocity.y = 150;
     }
-    if(point5.y==12)
+    if(point5.y===12)
     {
     Zombie5.animations.play('left');
         Zombie5.body.velocity.y = -150;
@@ -324,6 +339,26 @@ function turn() {
         turning = Phaser.NONE;
         return true;
     }
+}
+
+function lose() {
+    var text = this.game.add.text(game.camera.wisth / 2, game.camera.height / 2, "", {
+        font: "129px Arial",
+        fill: "#ffffff",
+        align: "center"
+    });
+    text.fixedToCamera = false;
+    text.setText("Game Over");
+}
+
+function win() {
+    var text = this.game.add.text(game.camera.wisth / 2, game.camera.height / 2, "", {
+        font: "154px Arial",
+        fill: "#ffffff",
+        align: "center"
+    });
+    text.fixedToCamera = false;
+    text.setText("You Won!");
 }
 
 //game.state.add('Game', PhaserGame, true);
