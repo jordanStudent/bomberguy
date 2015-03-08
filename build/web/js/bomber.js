@@ -191,6 +191,15 @@ function update() {
     hitBaddie(Zombie3);
     hitBaddie(Zombie4);
     hitBaddie(Zombie5);
+
+    checkWin();
+}
+
+function checkWin()
+{
+    if(!Zombie1.alive && !Zombie2.alive && !Zombie3.alive
+        && !Zombie4.alive && !Zombie5.alive)
+        win();
 }
 
 function hitBaddie(sprite) {
@@ -398,16 +407,18 @@ function lose() {
     });
     text.fixedToCamera = false;
     text.setText("Game Over");
+    game.gamePaused();
 }
 
 function win() {
     var text = this.game.add.text(game.camera.wisth / 2, game.camera.height / 2, "", {
-        font: "154px Arial",
+        font: "160px Arial",
         fill: "#ffffff",
         align: "center"
     });
     text.fixedToCamera = false;
-    text.setText("You Won!");
+    text.setText("You Win!");
+    game.gamePaused();
 }
 
 function fallout(b)
@@ -420,7 +431,7 @@ function fallout(b)
     {
         if(Zombie1.body.x >= (marker.x - 32) && Zombie1.body.x <= (marker.x + 64))
         {
-            Zombie1.destroy();
+            Zombie1.kill();
             baddieCounter--;
         }
 
@@ -429,7 +440,7 @@ function fallout(b)
     {
         if(Zombie1.body.y >= (marker.y - 32) && Zombie1.body.y <= (marker.y + 64))
         {
-            Zombie1.destroy();
+            Zombie1.kill();
             baddieCounter--;
         }
     }
@@ -439,7 +450,7 @@ function fallout(b)
     {
         if(Zombie2.body.x >= (marker.x - 32) && Zombie2.body.x <= (marker.x + 64))
         {
-            Zombie2.destroy();
+            Zombie2.kill();
             baddieCounter--;
         }
     }
@@ -447,7 +458,7 @@ function fallout(b)
     {
         if(Zombie2.body.y >= (marker.y - 32) && Zombie2.body.y <= (marker.y + 64))
         {
-            Zombie2.destroy();
+            Zombie2.kill();
             baddieCounter--;
         }
     }
@@ -457,7 +468,7 @@ function fallout(b)
     {
         if(Zombie3.body.x >= (marker.x - 32) && Zombie3.body.x <= (marker.x + 64))
         {
-            Zombie3.destroy();
+            Zombie3.kill();
             baddieCounter--;
         }
     }
@@ -465,7 +476,7 @@ function fallout(b)
     {
         if(Zombie3.body.y >= (marker.y - 32) && Zombie3.body.y <= (marker.y + 64))
         {
-            Zombie3.destroy();
+            Zombie3.kill();
             baddieCounter--;
         }
     }
@@ -475,7 +486,7 @@ function fallout(b)
     {
         if(Zombie4.body.x >= (marker.x - 32) && Zombie4.body.x <= (marker.x + 64))
         {
-            Zombie4.destroy();
+            Zombie4.kill();
             baddieCounter--;
         }
     }
@@ -483,7 +494,7 @@ function fallout(b)
     {
         if(Zombie4.body.y >= (marker.y - 32) && Zombie4.body.y <= (marker.y + 64))
         {
-            Zombie4.destroy();
+            Zombie4.kill();
             baddieCounter--;
         }
     }
@@ -493,7 +504,7 @@ function fallout(b)
     {
         if(Zombie5.body.x >= (marker.x - 32) && Zombie5.body.x <= (marker.x + 64))
         {
-            Zombie5.destroy();
+            Zombie5.kill();
             baddieCounter--;
         }
     }
@@ -501,7 +512,7 @@ function fallout(b)
     {
         if(Zombie5.body.y >= (marker.y - 32) && Zombie5.body.y <= (marker.y + 64))
         {
-            Zombie5.destroy();
+            Zombie5.kill();
             baddieCounter--;
         }
     }
@@ -510,21 +521,18 @@ function fallout(b)
     {
         if(player.body.x >= (marker.x - 32) && player.body.x <= (marker.x + 64))
         {
-            player.destroy();
-            alert("Gam Over!\nRefresh to play again");
+            player.kill();
+            lose();
         }
-
-
     }
     if(player.body.x >= marker.x && player.x <= (marker.x + 32))
     {
         if(player.body.y >= (marker.y - 32) && player.body.y <= (marker.y + 64))
          {
-            player.destroy();
-            alert("Gam Over!\nRefresh to play again");
+            player.kill();
+            lose();
         }
     }
-
 
 }
 
