@@ -350,6 +350,9 @@ function endGame(status) {
     } else {
         text.setText("Game Over");        
     }
+    setTimeout(function() {
+        window.location.reload();
+    }, 2500);
 }
 
 function fallout(b) {
