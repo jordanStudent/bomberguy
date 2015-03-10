@@ -52,6 +52,11 @@ function create() {
     Zombie3.body.velocity.x = speed2;
     Zombie4.body.velocity.y = speed2;
     Zombie5.body.velocity.y = -speed2;
+    Zombie1.animations.play('right');
+    Zombie2.animations.play('right');
+    Zombie3.animations.play('right');
+    Zombie4.animations.play('right');
+    Zombie5.animations.play('right');
  
     player = game.add.sprite(48, 48, 'dude', 4);
     player.animations.add('left', [0, 1, 2, 3], 10, true);
@@ -73,13 +78,10 @@ function create() {
         bomb.anchor.set(0.5);
         bomb.scale.set(.40, .30);
         bombPointer = bomb;
-        setTimeout(function()
-        {
-                
+        setTimeout(function() {                
             fallout(bomb);
             boom(bomb);
             bomb.destroy();
-
         }, 1000);        
     }, this);
 }
@@ -95,50 +97,34 @@ function makeZombie(px, py) {
 }
 
 function update() {
-    game.physics.arcade.collide(player, layer);
-    
+    AnimateZombie();
+       
+    if(!player.alive) {
+        endGame("lose");
+    }
+        
     // check for collisions
+    game.physics.arcade.collide(player, layer);
     hitBaddie(Zombie1);
     hitBaddie(Zombie2);
     hitBaddie(Zombie3);
     hitBaddie(Zombie4);
     hitBaddie(Zombie5);
     
-    /*marker.x = game.math.snapToFloor(Math.floor(player.x), 32) / 32;
-    marker.y = game.math.snapToFloor(Math.floor(player.y), 32) / 32;
-    
-    directions[1] = map.getTileLeft(layer.index, marker.x, marker.y);
-    directions[2] = map.getTileRight(layer.index, marker.x, marker.y);
-    directions[3] = map.getTileAbove(layer.index, marker.x, marker.y);
-    directions[4] = map.getTileBelow(layer.index, marker.x, marker.y);
-    
-    //checkKeys();
-    if(turning !== Phaser.NONE) {
-        turn();
-    }*/
-    
-    // reset body velocity each time
-    /*player.body.velocity.x = 0;
-    player.body.velocity.y = 0;*/
-
     marker.x = game.math.snapToFloor(Math.floor(player.x), 32) / 32;
     marker.y = game.math.snapToFloor(Math.floor(player.y), 32) / 32;
-    
+
     if(cursors.left.isDown) {
-        //snapToY();
         player.body.velocity.x = -speed;
         player.animations.play('left');
     } else if (cursors.right.isDown) {
-        //snapToY();
         player.body.velocity.x = speed;
         player.animations.play('right');
     } else if (cursors.up.isDown) {
-        //snapToX();
         player.body.velocity.y = -speed;
         player.animations.stop();
         player.frame = 4;
     } else if (cursors.down.isDown) {
-        //snapToX();
         player.body.velocity.y = speed;
         player.animations.stop();
         player.frame = 4;
@@ -150,13 +136,10 @@ function update() {
         player.frame = 4;
     }
 
-    AnimateZombie();
-
     checkWin();
 }
 
-function checkWin()
-{
+function checkWin() {
     if(!Zombie1.alive && !Zombie2.alive && !Zombie3.alive
         && !Zombie4.alive && !Zombie5.alive)
         endGame("win");
@@ -170,7 +153,6 @@ function hitBaddie(sprite) {
             sprite === Zombie4 || sprite === Zombie5) {
         game.physics.arcade.overlap(player, sprite, function() {
             player.kill();
-            endGame("lose");
         }, null, game);
     }
 }
@@ -209,15 +191,11 @@ function boom(b){
         s.destroy();
     } ); }, 2000);
 
-    for(var x = 0; x < 5; x++)
-    {
+    for(var x = 0; x < 5; x++) {
         setTimeout(function(){fireSprites.forEach(function(s){
             fallout(b);
         } ); }, x * 400);
-    }
-
-    //Call the fallout function after this comment!!!!
-	
+    }	
 }
 
 function AnimateZombie(){
@@ -226,12 +204,11 @@ function AnimateZombie(){
     var point3 = getTileCoord(Zombie3);
     var point4 = getTileCoord(Zombie4);
     var point5 = getTileCoord(Zombie5);
-    if(point.x===1){
+    if(point.x===3){
         Zombie1.animations.play('right');
         Zombie1.body.velocity.x = speed;
     }
-    if(point.x===12)
-    {
+    if(point.x===12) {
         Zombie1.animations.play('left');
         Zombie1.body.velocity.x = -speed;
     }
@@ -273,14 +250,12 @@ function AnimateZombie(){
     }
 }
 
-function snapToY()
-{
+function snapToY() {
     marker.y = game.math.snapToFloor(Math.floor(player.y), 32) / 32;
     player.body.y = (marker.y * 32);
 }
 
-function snapToX()
-{
+function snapToX() {
     marker.x = game.math.snapToFloor(Math.floor(player.x), 32) / 32;
     player.body.x = (marker.x * 32);
 }
@@ -323,8 +298,7 @@ function checkDirection(direction) {
     if(current === opposites[direction]) {
         move(direction);
     } else {
-        turning = direction;
-        
+        turning = direction;        
         turnPoint.x = marker.x*32 + 32/2;
         turnPoint.y = marker.y*32 + 32/2;    
     }
@@ -353,6 +327,7 @@ function turn() {
 }
 
 function endGame(status) {
+    game.gamePaused();
     var text = this.game.add.text(game.camera.wisth / 2, game.camera.height / 2, "", {
         font: "129px Arial",
         fill: "#ffffff",
@@ -364,11 +339,9 @@ function endGame(status) {
     } else {
         text.setText("Game Over");        
     }
-    game.gamePaused();
 }
 
-function fallout(b)
-{
+function fallout(b) {
     marker.x = game.math.snapToFloor(Math.floor(b.x), 32);
     marker.y = game.math.snapToFloor(Math.floor(b.y), 32);
     
@@ -378,20 +351,17 @@ function fallout(b)
     checkFallout(Zombie4);
     checkFallout(Zombie5);
     checkFallout(player);
-
 }
 
 function checkFallout(sprite) {
     if(sprite.body.y >= marker.y && sprite.y <= (marker.y + 32)) {
-        if(sprite.body.x >= (marker.x - 32) && sprite.body.x <= (marker.x + 64)) {
+        if(sprite.body.x > (marker.x - 64) && sprite.body.x < (marker.x + 64)) {
             sprite.kill();
-            endGame("lose");
         }
     }
     if(sprite.body.x >= marker.x && sprite.x <= (marker.x + 32)) {
-        if(sprite.body.y >= (marker.y - 32) && sprite.body.y <= (marker.y + 64)) {
+        if(sprite.body.y > (marker.y - 64) && sprite.body.y < (marker.y + 64)) {
             sprite.kill();
-            endGame("lose");
         }
     }
 }
