@@ -16,14 +16,11 @@ var Zombie4 = null;
 var Zombie5 = null;
 var player = null;
 var speed = 150;
-var speed2 = 100;
+var speed2 = 150;
 var current = Phaser.UP;
 var cursors = null;
 var turning = null;
 var spaceKey = null;
-var detKey = null;
-var bombCG = null;
-var bombPointer = null;
 var baddieCounter = 5;
 
 // note: graphics copyright 2015 Photon Storm Ltd
@@ -42,11 +39,11 @@ function create() {
     layer = map.createLayer('Tile Layer 1');
     map.setCollision(6, true, this.layer);
     
-    Zombie1 = makeZombie(32*5.5, 32*1.5);
-    Zombie2 = makeZombie(32*5.5, 32*7.5);
-    Zombie3 = makeZombie(32*5.5, 32*5.5);
-    Zombie4 = makeZombie(32*3.5, 32*4.5);
-    Zombie5 = makeZombie(32*5.5, 32*4.5);
+    Zombie1 = makeZombie(32*5.5, 32*rand(1, 14));
+    Zombie2 = makeZombie(32*5.5, 32*rand(1, 14));
+    Zombie3 = makeZombie(32*5.5, 32*rand(1, 14));
+    Zombie4 = makeZombie(32*rand(4, 18), 32*4.5);
+    Zombie5 = makeZombie(32*rand(4, 18), 32*4.5);
     Zombie1.body.velocity.x = speed2;
     Zombie2.body.velocity.x = speed2;
     Zombie3.body.velocity.x = speed2;
@@ -67,23 +64,29 @@ function create() {
     
     cursors = game.input.keyboard.createCursorKeys();
     spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    detKey = game.input.keyboard.addKey(Phaser.Keyboard.X);
-
-    detKey.onDown.add(function(){
-        bombPointer.destroy();
-    }, this);
-
+    
     spaceKey.onDown.add(function(){
         var bomb = game.add.sprite(marker.x * 32 + 16, marker.y * 32 + 16, 'bomb', 0);
         bomb.anchor.set(0.5);
         bomb.scale.set(.40, .30);
-        bombPointer = bomb;
         setTimeout(function() {                
             fallout(bomb);
+            setTimeout(function() {
+                fallout(bomb);
+            }, 25);
             boom(bomb);
             bomb.destroy();
         }, 1000);        
     }, this);
+}
+
+function rand(min, max) {
+    var x = Math.floor(Math.random()*(max - min + 1) + min);
+    if(x % 2 === 0) {
+        x--;
+    }
+    x += 0.5;
+    return x;
 }
 
 function makeZombie(px, py) {
@@ -187,14 +190,23 @@ function boom(b){
         fireSprites[i].animations.play('left');
     }
 	
-    setTimeout(function(){fireSprites.forEach(function(s){
-        s.destroy();
-    } ); }, 2000);
+    setTimeout(function(){
+        fireSprites.forEach(function(s){
+            s.destroy();
+        });
+    }, 2000);
 
     for(var x = 0; x < 5; x++) {
-        setTimeout(function(){fireSprites.forEach(function(s){
-            fallout(b);
-        } ); }, x * 400);
+        setTimeout(function(){
+            fireSprites.forEach(function(s){
+                fallout(b);
+            });
+        }, x * 400);
+        setTimeout(function(){
+            fireSprites.forEach(function(s){
+                fallout(b);
+            });
+        }, x * 400 + 200);
     }	
 }
 
@@ -206,47 +218,46 @@ function AnimateZombie(){
     var point5 = getTileCoord(Zombie5);
     if(point.x===3){
         Zombie1.animations.play('right');
-        Zombie1.body.velocity.x = speed;
+        Zombie1.body.velocity.x = speed2;
     }
-    if(point.x===12) {
+    if(point.x===15) {
         Zombie1.animations.play('left');
-        Zombie1.body.velocity.x = -speed;
+        Zombie1.body.velocity.x = -speed2;
     }
-    if(point2.x===1){
+    if(point2.x===5){
         Zombie2.animations.play('right');
-        Zombie2.body.velocity.x = speed;
+        Zombie2.body.velocity.x = speed2;
     }
-    if(point2.x===12)
-    {
+    if(point2.x===18) {
         Zombie2.animations.play('left');
-        Zombie2.body.velocity.x = -speed;
+        Zombie2.body.velocity.x = -speed2;
     }
-    if(point3.x===3){
+    if(point3.x===2){
         Zombie3.animations.play('right');
-        Zombie3.body.velocity.x = speed;
+        Zombie3.body.velocity.x = speed2;
     }
-    if(point3.x===7)
+    if(point3.x===9)
     {
         Zombie3.animations.play('left');
-        Zombie3.body.velocity.x = -speed;
+        Zombie3.body.velocity.x = -speed2;
     }
-    if(point4.y===1){
+    if(point4.y===3){
         Zombie4.animations.play('right');
-        Zombie4.body.velocity.y = speed;
+        Zombie4.body.velocity.y = speed2;
     }
     if(point4.y===12)
     {
         Zombie4.animations.play('left');
-        Zombie4.body.velocity.y = -speed;
+        Zombie4.body.velocity.y = -speed2;
     }
     if(point5.y===4){
         Zombie5.animations.play('right');
-        Zombie5.body.velocity.y = speed;
+        Zombie5.body.velocity.y = speed2;
     }
-    if(point5.y===12)
+    if(point5.y===11)
     {
         Zombie5.animations.play('left');
-        Zombie5.body.velocity.y = -speed;
+        Zombie5.body.velocity.y = -speed2;
     }
 }
 
