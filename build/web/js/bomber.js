@@ -94,7 +94,7 @@ function makeZombie(px, py) {
     zombie.animations.add('left',[0,1],10,true);
     zombie.animations.add('right',[2,3],10,true);
     zombie.anchor.set(.5);
-    zombie.scale.set(1, .66);
+    zombie.scale.set(1, .65);
     game.physics.arcade.enable(zombie);
     return zombie;
 }
