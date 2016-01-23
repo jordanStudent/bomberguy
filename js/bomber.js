@@ -20,7 +20,7 @@
     var spaceKey = null;
     var baddieCounter = 5;
 
-    var musicPlayNormal, musicLevelComplete, musicDead, musicBoom, musicSplat;
+    var musicPlayNormal, musicLevelComplete, musicDead, musicBoom, musicSplat, musicBump;
     
     for(var i = 0; i < baddieCounter; ++i)
     {
@@ -41,6 +41,7 @@
         game.load.audio('musicDead', 'assets/audio/-009-dead.mp3');
         game.load.audio('musicBoom', 'assets/audio/bomb-03.mp3');
         game.load.audio('musicSplat', 'assets/audio/splat.mp3');
+        game.load.audio('musicBump', 'assets/audio/bump-cut.mp3');
     }
     
     function Zombie(sprite) {
@@ -74,9 +75,11 @@
         musicDead = game.add.audio('musicDead');
         musicBoom = game.add.audio('musicBoom');
         musicSplat = game.add.audio('musicSplat');
+        musicBump = game.add.audio('musicBump');
 
         musicBoom.volume = 0.15;
         musicSplat.volume = 0.7;
+        musicBump.volume = 0.3;
         musicPlayNormal.loop = true;
         musicPlayNormal.play();
      
@@ -130,7 +133,7 @@
         if(!player.alive) {  endGame("lose"); }
             
         // check for collisions
-        game.physics.arcade.collide(player, layer);
+        game.physics.arcade.collide(player, layer, function() { /*musicBump.play();*/ });
         
         for(var i = 0; i < baddieCounter; ++i)
             hitBaddie(Zombies[i]);
