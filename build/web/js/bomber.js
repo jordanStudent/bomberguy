@@ -35,6 +35,11 @@
         game.load.spritesheet('explosion', 'assets/explosion17.png', 64, 64);
     }
     
+    function Zombie(sprite) {
+        this.sprite = sprite
+   
+    }
+    
     function create() {
         map = game.add.tilemap('map');
         map.addTilesetImage('tiles');
