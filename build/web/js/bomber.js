@@ -365,6 +365,7 @@
     	game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
 
         game.paused = true;
+        clearAllTimeout();
         var text = game.add.text(0, game.camera.height / 3, "", {
             font: "129px Arial",
             fill: "#ffffff",
