@@ -140,7 +140,7 @@
     
     function checkWin() {
         if(!Zombie1.alive && !Zombie2.alive && !Zombie3.alive
-            && !Zombie4.alive && !Zombie5.alive)
+            && !Zombie4.alive && !Zombie5.alive && player.alive)
             endGame("win");
     }
     
@@ -206,13 +206,13 @@
         }	
     }
     
-    function AnimateZombie(){
+    function AnimateZombie() {
         var point = getTileCoord(Zombie1);
         var point2 = getTileCoord(Zombie2);
         var point3 = getTileCoord(Zombie3);
         var point4 = getTileCoord(Zombie4);
         var point5 = getTileCoord(Zombie5);
-        if(point.x===3){
+        if(point.x===3) {
             Zombie1.animations.play('right');
             Zombie1.body.velocity.x = speed2;
         }
@@ -220,7 +220,7 @@
             Zombie1.animations.play('left');
             Zombie1.body.velocity.x = -speed2;
         }
-        if(point2.x===5){
+        if(point2.x===5) {
             Zombie2.animations.play('right');
             Zombie2.body.velocity.x = speed2;
         }
@@ -228,30 +228,27 @@
             Zombie2.animations.play('left');
             Zombie2.body.velocity.x = -speed2;
         }
-        if(point3.x===2){
+        if(point3.x===2) {
             Zombie3.animations.play('right');
             Zombie3.body.velocity.x = speed2;
         }
-        if(point3.x===9)
-        {
+        if(point3.x===9) {
             Zombie3.animations.play('left');
             Zombie3.body.velocity.x = -speed2;
         }
-        if(point4.y===3){
+        if(point4.y===3) {
             Zombie4.animations.play('right');
             Zombie4.body.velocity.y = speed2;
         }
-        if(point4.y===12)
-        {
+        if(point4.y===12) {
             Zombie4.animations.play('left');
             Zombie4.body.velocity.y = -speed2;
         }
-        if(point5.y===4){
+        if(point5.y===4) {
             Zombie5.animations.play('right');
             Zombie5.body.velocity.y = speed2;
         }
-        if(point5.y===11)
-        {
+        if(point5.y===11) {
             Zombie5.animations.play('left');
             Zombie5.body.velocity.y = -speed2;
         }
