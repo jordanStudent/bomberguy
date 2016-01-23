@@ -20,7 +20,7 @@
     var spaceKey = null;
     var baddieCounter = 5;
 
-    var musicPlayNormal, musicLevelComplete, musicDead;
+    var musicPlayNormal, musicLevelComplete, musicDead, musicBoom;
     
     for(var i = 0; i < baddieCounter; ++i)
     {
@@ -38,6 +38,8 @@
         game.load.audio('musicPN', 'assets/audio/-003-game-play-normal-.mp3');
         game.load.audio('musicLC', 'assets/audio/-005-level-complete.mp3');
         game.load.audio('musicDead', 'assets/audio/-009-dead.mp3');
+        game.load.audio('musicDead', 'assets/audio/-009-dead.mp3');
+        game.load.audio('musicBoom', 'assets/audio/bomb-03.mp3');
     }
     
     function Zombie(sprite) {
@@ -69,7 +71,9 @@
         musicPlayNormal = game.add.audio('musicPN');
         musicLevelComplete = game.add.audio('musicLC');
         musicDead = game.add.audio('musicDead');
+        musicBoom = game.add.audio('musicBoom');
 
+        musicBoom.volume = 0.15;
         musicPlayNormal.loop = true;
         musicPlayNormal.play();
      
@@ -212,6 +216,8 @@
     
     //Pass this function a bomb!!!
     function boom(b){
+        musicBoom.play();
+
         var fireSprites = [];
         var x = getTileCoord(b).x;
         var y = getTileCoord(b).y;
