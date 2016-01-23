@@ -20,7 +20,7 @@
     var spaceKey = null;
     var baddieCounter = 5;
 
-    var musicPlayNormal, musicLevelComplete, musicDead, musicBoom;
+    var musicPlayNormal, musicLevelComplete, musicDead, musicBoom, musicSplat;
     
     for(var i = 0; i < baddieCounter; ++i)
     {
@@ -40,6 +40,7 @@
         game.load.audio('musicDead', 'assets/audio/-009-dead.mp3');
         game.load.audio('musicDead', 'assets/audio/-009-dead.mp3');
         game.load.audio('musicBoom', 'assets/audio/bomb-03.mp3');
+        game.load.audio('musicSplat', 'assets/audio/splat.mp3');
     }
     
     function Zombie(sprite) {
@@ -72,6 +73,7 @@
         musicLevelComplete = game.add.audio('musicLC');
         musicDead = game.add.audio('musicDead');
         musicBoom = game.add.audio('musicBoom');
+        musicSplat = game.add.audio('musicSplat');
 
         musicBoom.volume = 0.15;
         musicPlayNormal.loop = true;
@@ -193,6 +195,7 @@
         
         if(isAZombie(sprite)) {
             game.physics.arcade.overlap(player, sprite, function() {
+                musicSplat.play();
                 player.kill();
             }, null, game);
         }
@@ -417,12 +420,14 @@
     
     function checkFallout(sprite) {
         if(sprite.body.y >= marker.y && sprite.y <= (marker.y + 32)) {
-            if(sprite.body.x > (marker.x - 64) && sprite.body.x < (marker.x + 64)) {
+            if(sprite.body.x > (marker.x - 64) && sprite.body.x < (marker.x + 64) && sprite.alive) {
+                musicSplat.play();
                 sprite.kill();
             }
         }
         if(sprite.body.x >= marker.x && sprite.x <= (marker.x + 32)) {
-            if(sprite.body.y > (marker.y - 64) && sprite.body.y < (marker.y + 64)) {
+            if(sprite.body.y > (marker.y - 64) && sprite.body.y < (marker.y + 64) && sprite.alive) {
+                musicSplat.play();
                 sprite.kill();
             }
         }
