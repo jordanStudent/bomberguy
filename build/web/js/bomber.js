@@ -9,11 +9,8 @@
     var turnPoint = new Phaser.Point();
     var directions = [null, null, null, null, null];
     var opposites = [Phaser.NONE, Phaser.RIGHT, Phaser.LEFT, Phaser.DOWN, Phaser.UP];
-    var Zombie1 = null;
-    var Zombie2 = null;
-    var Zombie3 = null;
-    var Zombie4 = null;
-    var Zombie5 = null;
+    var Zombies = [];
+    
     var player = null;
     var speed = 150;
     var speed2 = 150;
@@ -22,6 +19,11 @@
     var turning = null;
     var spaceKey = null;
     var baddieCounter = 5;
+    
+    for(var i = 0; i < baddieCounter; ++i)
+    {
+        Zombies[i] = null;
+    }
     
     // note: graphics copyright 2015 Photon Storm Ltd
     function preload() {
@@ -39,21 +41,22 @@
         layer = map.createLayer('Tile Layer 1');
         map.setCollision(6, true, this.layer);
         
-        Zombie1 = makeZombie(32*5.5, 32*rand(1, 14));
-        Zombie2 = makeZombie(32*5.5, 32*rand(1, 14));
-        Zombie3 = makeZombie(32*5.5, 32*rand(1, 14));
-        Zombie4 = makeZombie(32*rand(4, 18), 32*4.5);
-        Zombie5 = makeZombie(32*rand(4, 18), 32*4.5);
-        Zombie1.body.velocity.x = speed2;
-        Zombie2.body.velocity.x = speed2;
-        Zombie3.body.velocity.x = speed2;
-        Zombie4.body.velocity.y = speed2;
-        Zombie5.body.velocity.y = -speed2;
-        Zombie1.animations.play('right');
-        Zombie2.animations.play('right');
-        Zombie3.animations.play('right');
-        Zombie4.animations.play('right');
-        Zombie5.animations.play('right');
+        for(var i = 0; i < baddieCounter; ++i)
+        {
+            if(i < 3)
+            {
+                Zombies[i] = makeZombie(32*5.5, 32*rand(1, 14));
+                Zombies[i].body.velocity.x = speed2;
+            }
+            else
+            {
+                Zombies[i] = makeZombie(32*rand(4,18),32*4.5);
+                Zombies[i].body.velocity.y = (i == 4) ? -speed2 : speed2;
+            }
+            Zombies[i].animations.play('right');
+        }
+        
+        
      
         player = game.add.sprite(48, 48, 'dude', 4);
         player.animations.add('left', [0, 1, 2, 3], 10, true);
@@ -104,11 +107,9 @@
             
         // check for collisions
         game.physics.arcade.collide(player, layer);
-        hitBaddie(Zombie1);
-        hitBaddie(Zombie2);
-        hitBaddie(Zombie3);
-        hitBaddie(Zombie4);
-        hitBaddie(Zombie5);
+        
+        for(var i = 0; i < baddieCounter; ++i)
+            hitBaddie(Zombies[i]);
         
         marker.x = game.math.snapToFloor(Math.floor(player.x), 32) / 32;
         marker.y = game.math.snapToFloor(Math.floor(player.y), 32) / 32;
@@ -138,18 +139,37 @@
         checkWin();
     }
     
+    function anyZombiesAlive() {
+        var answer = false;
+        for(var i = 0; i < baddieCounter; ++i)
+            if(Zombies[i].alive)
+                answer = true;
+        return answer;
+        
+    }
+    
     function checkWin() {
-        if(!Zombie1.alive && !Zombie2.alive && !Zombie3.alive
-            && !Zombie4.alive && !Zombie5.alive)
+        if(!anyZombiesAlive())
             endGame("win");
+    }
+    
+    function spriteEquals(sprite1, sprite2){
+        return sprite1 === sprite2;
+    }
+    
+    function isAZombie(sprite){
+        for(var i = 0; i < baddieCounter; i++){
+            if(spriteEquals(sprite, Zombies[i]))
+                return true;
+        }
+        return false;
     }
     
     function hitBaddie(sprite) {
         // set sprite collision
         game.physics.arcade.collide(sprite, layer);
         
-        if(sprite === Zombie1 || sprite === Zombie2 || sprite === Zombie3 ||
-                sprite === Zombie4 || sprite === Zombie5) {
+        if(isAZombie(sprite)) {
             game.physics.arcade.overlap(player, sprite, function() {
                 player.kill();
             }, null, game);
@@ -207,53 +227,53 @@
     }
     
     function AnimateZombie(){
-        var point = getTileCoord(Zombie1);
-        var point2 = getTileCoord(Zombie2);
-        var point3 = getTileCoord(Zombie3);
-        var point4 = getTileCoord(Zombie4);
-        var point5 = getTileCoord(Zombie5);
-        if(point.x===3){
-            Zombie1.animations.play('right');
-            Zombie1.body.velocity.x = speed2;
-        }
-        if(point.x===15) {
-            Zombie1.animations.play('left');
-            Zombie1.body.velocity.x = -speed2;
-        }
-        if(point2.x===5){
-            Zombie2.animations.play('right');
-            Zombie2.body.velocity.x = speed2;
-        }
-        if(point2.x===18) {
-            Zombie2.animations.play('left');
-            Zombie2.body.velocity.x = -speed2;
-        }
-        if(point3.x===2){
-            Zombie3.animations.play('right');
-            Zombie3.body.velocity.x = speed2;
-        }
-        if(point3.x===9)
+        for(var i = 0; i < baddieCounter; ++i)
         {
-            Zombie3.animations.play('left');
-            Zombie3.body.velocity.x = -speed2;
-        }
-        if(point4.y===3){
-            Zombie4.animations.play('right');
-            Zombie4.body.velocity.y = speed2;
-        }
-        if(point4.y===12)
-        {
-            Zombie4.animations.play('left');
-            Zombie4.body.velocity.y = -speed2;
-        }
-        if(point5.y===4){
-            Zombie5.animations.play('right');
-            Zombie5.body.velocity.y = speed2;
-        }
-        if(point5.y===11)
-        {
-            Zombie5.animations.play('left');
-            Zombie5.body.velocity.y = -speed2;
+            var point = getTileCoord(Zombies[i]);
+        
+            if(point.x===3 && i == 0){
+                Zombies[i].animations.play('right');
+                Zombies[i].body.velocity.x = speed2;
+            }
+            if(point.x===15 && i == 0) {
+                Zombies[i].animations.play('left');
+                Zombies[i].body.velocity.x = -speed2;
+            }
+            if(point.x===5 && i == 1){
+                Zombies[i].animations.play('right');
+                Zombies[i].body.velocity.x = speed2;
+            }
+            if(point.x===18 && i == 1) {
+                Zombies[i].animations.play('left');
+                Zombies[i].body.velocity.x = -speed2;
+            }
+            if(point.x===2 && i == 2){
+                Zombies[i].animations.play('right');
+                Zombies[i].body.velocity.x = speed2;
+            }
+            if(point.x===9 && i == 2)
+            {
+                Zombies[i].animations.play('left');
+                Zombies[i].body.velocity.x = -speed2;
+            }
+            if(point.y===3 && i == 3){
+                Zombies[i].animations.play('right');
+                Zombies[i].body.velocity.y = speed2;
+            }
+            if(point.y===12 && i == 3)
+            {
+                Zombies[i].animations.play('left');
+                Zombies[i].body.velocity.y = -speed2;
+            }
+            if(point.y===4 && i == 4){
+                Zombies[i].animations.play('right');
+                Zombies[i].body.velocity.y = speed2;
+            }
+            if(point.y===11 && i == 4)
+            {
+                Zombies[i].animations.play('left');
+                Zombies[i].body.velocity.y = -speed2;
+            }
         }
     }
     
@@ -357,11 +377,8 @@
         marker.x = game.math.snapToFloor(Math.floor(b.x), 32);
         marker.y = game.math.snapToFloor(Math.floor(b.y), 32);
         
-        checkFallout(Zombie1);
-        checkFallout(Zombie2);
-        checkFallout(Zombie3);
-        checkFallout(Zombie4);
-        checkFallout(Zombie5);
+        for(var i = 0; i < baddieCounter; ++i)
+            checkFallout(Zombies[i]);
         checkFallout(player);
     }
     
