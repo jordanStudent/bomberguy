@@ -76,6 +76,7 @@
         musicSplat = game.add.audio('musicSplat');
 
         musicBoom.volume = 0.15;
+        musicSplat.volume = 0.7;
         musicPlayNormal.loop = true;
         musicPlayNormal.play();
      
