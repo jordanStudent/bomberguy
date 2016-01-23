@@ -74,17 +74,19 @@
         spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         
         spaceKey.onDown.add(function() {
-            var bomb = game.add.sprite(marker.x * 32 + 16, marker.y * 32 + 16, 'bomb', 0);
-            bomb.anchor.set(0.5);
-            bomb.scale.set(.40, .30);
-            setTimeout(function() {                
-                fallout(bomb);
-                setTimeout(function() {
-                    fallout(bomb);
-                }, 25);
-                boom(bomb);
-                bomb.destroy();
-            }, 1000);        
+        	if(player.alive) {
+	            var bomb = game.add.sprite(marker.x * 32 + 16, marker.y * 32 + 16, 'bomb', 0);
+	            bomb.anchor.set(0.5);
+	            bomb.scale.set(.40, .30);
+	            setTimeout(function() {                
+	                fallout(bomb);
+	                setTimeout(function() {
+	                    fallout(bomb);
+	                }, 25);
+	                boom(bomb);
+	                bomb.destroy();
+	            }, 1000);        
+	        }
         }, this);
     }
     
@@ -362,8 +364,6 @@
     }
     
     function endGame(status) {
-    	game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
-
         game.paused = true;
         clearAllTimeout();
         var text = game.add.text(0, game.camera.height / 3, "", {
