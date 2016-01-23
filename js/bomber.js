@@ -19,6 +19,8 @@
     var turning = null;
     var spaceKey = null;
     var baddieCounter = 5;
+
+    var musicPlayNormal, musicLevelComplete, musicDead;
     
     for(var i = 0; i < baddieCounter; ++i)
     {
@@ -33,6 +35,9 @@
         game.load.spritesheet('baddie', 'assets/baddie.png', 32,32);
         game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
         game.load.spritesheet('explosion', 'assets/explosion17.png', 64, 64);
+        game.load.audio('musicPN', 'assets/audio/-003-game-play-normal-.mp3');
+        game.load.audio('musicLC', 'assets/audio/-005-level-complete.mp3');
+        game.load.audio('musicDead', 'assets/audio/-009-dead.mp3');
     }
     
     function Zombie(sprite) {
@@ -61,7 +66,12 @@
             Zombies[i].animations.play('right');
         }
         
-        
+        musicPlayNormal = game.add.audio('musicPN');
+        musicLevelComplete = game.add.audio('musicLC');
+        musicDead = game.add.audio('musicDead');
+
+        musicPlayNormal.loop = true;
+        musicPlayNormal.play();
      
         player = game.add.sprite(48, 48, 'dude', 4);
         player.animations.add('left', [0, 1, 2, 3], 10, true);
@@ -364,7 +374,9 @@
     }
     
     function endGame(status) {
+        musicPlayNormal.stop();
         game.paused = true;
+        game.sound.mute = false;
         clearAllTimeout();
         var text = game.add.text(0, game.camera.height / 3, "", {
             font: "129px Arial",
@@ -373,15 +385,19 @@
         });
         text.fixedToCamera = false;
         if(status === "win") {
+            musicLevelComplete.play();
             text.setText("You win!!!!!!");
         } else {
+            musicDead.play();
             text.setText("Game Over");        
         }
         setTimeout(function() {
             text.setText("");
+            musicLevelComplete.stop();
+            musicDead.stop();
             create();
             game.paused = false;
-        }, 2500);
+        }, 3000);
     }
     
     function fallout(b) {
