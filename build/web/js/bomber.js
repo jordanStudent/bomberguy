@@ -68,7 +68,7 @@
         cursors = game.input.keyboard.createCursorKeys();
         spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         
-        spaceKey.onDown.add(function(){
+        spaceKey.onDown.add(function() {
             var bomb = game.add.sprite(marker.x * 32 + 16, marker.y * 32 + 16, 'bomb', 0);
             bomb.anchor.set(0.5);
             bomb.scale.set(.40, .30);
@@ -149,7 +149,8 @@
     }
     
     function checkWin() {
-        if(!anyZombiesAlive())
+
+        if(!anyZombiesAlive() && player.alive)
             endGame("win");
     }
     
@@ -226,6 +227,7 @@
         }	
     }
     
+
     function AnimateZombie(){
         for(var i = 0; i < baddieCounter; ++i)
         {
@@ -274,6 +276,7 @@
                 Zombies[i].animations.play('left');
                 Zombies[i].body.velocity.y = -speed2;
             }
+
         }
     }
     
@@ -354,6 +357,8 @@
     }
     
     function endGame(status) {
+    	game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
+
         game.paused = true;
         var text = game.add.text(0, game.camera.height / 3, "", {
             font: "129px Arial",
