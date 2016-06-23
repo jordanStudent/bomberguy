@@ -402,17 +402,19 @@
         game.paused = true;
         game.sound.mute = false;
         clearAllTimeout();
-        var text = game.add.text(0, game.camera.height / 3, "", {
-            font: "129px Arial",
-            fill: "#ffffff",
-            align: "center"
-        });
-        text.fixedToCamera = false;
+        var style = {
+            font: "129px TheMillionMileMan",
+            fill: "#ffffff"
+        };
         if(status === "win") {
             musicLevelComplete.play();
-            text.setText("You win!!!!!!");
+            var text = game.add.text(game.camera.width / 8, game.camera.height / 3, "", style);
+            text.fixedToCamera = false;
+            text.setText("You Win");
         } else {
             musicDead.play();
+            var text = game.add.text(0, game.camera.height / 3, "", style);
+            text.fixedToCamera = false;
             text.setText("Game Over");        
         }
         setTimeout(function() {
